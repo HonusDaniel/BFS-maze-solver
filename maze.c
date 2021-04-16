@@ -4,7 +4,29 @@
 #include "maze.h"
 #include <assert.h>
 
-//optional function to print a maze file
+
+int solve(char* filename)
+{
+  FILE* maze;
+
+  // if can't load file, exit
+  if (!(maze = fopen(filename, "r"))){
+    printf("could not find '%s' file with maze, exiting...\n", filename);
+    assert(!fclose(maze));
+    exit(EXIT_FAILURE);
+  }
+
+  //if okay continue to solve
+  FILE* output = fopen("output", "w+");
+
+
+  assert(!fclose(maze));
+  assert(!fclose(output));
+  return 0;
+}
+
+
+//optional function to print a maze file using special characters
 void printmaze(char* filename){
   int width, height = 0;
   FILE* maze;
