@@ -51,8 +51,8 @@ void printmaze(char* filename){
       if (maze_array[i][j] == 1)
         printf("#");
       else if (maze_array[i][j] == 2 || maze_array[i][j] == 3) 
-        printf("X");
-      else printf(" ");
+          printf("X");
+        else printf(" ");
     }
     printf("\n");
   }
