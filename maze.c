@@ -7,7 +7,6 @@
 
 // https://stackoverflow.com/questions/60656309/how-could-i-optimize-my-breadth-search-algorithm-for-solving-bigger-mazes
 
-
 int solve(char* filename)
 {
   FILE* maze;
