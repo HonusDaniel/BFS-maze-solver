@@ -10,7 +10,7 @@ int main()
   char* mazefile = "input";
   
   //optionally print the file
-  printmaze(mazefile);
+  //printmaze(mazefile);
   
   //solve the maze
   if (!(solve(mazefile) == 0))

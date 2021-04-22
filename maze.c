@@ -3,6 +3,9 @@
 #include <string.h>
 #include "maze.h"
 #include <assert.h>
+#include <stdbool.h>
+
+// https://stackoverflow.com/questions/60656309/how-could-i-optimize-my-breadth-search-algorithm-for-solving-bigger-mazes
 
 
 int solve(char* filename)
@@ -19,6 +22,23 @@ int solve(char* filename)
   //if okay continue to solve
   FILE* output = fopen("output", "w+");
 
+  int width, height;
+  fscanf(maze, "%d %d", &width, &height);
+  
+  int maze_array[width][height];
+  bool visited[width][height];
+
+  //read and print
+  for (int i = 0; i < height; i++)
+  {
+    for(int j = 0; j < width; j++)
+    {
+      fscanf(maze, "%1d", &maze_array[i][j]);
+      visited[i][j] = false;
+    }
+  }
+
+  
 
   assert(!fclose(maze));
   assert(!fclose(output));
@@ -37,6 +57,7 @@ void printmaze(char* filename){
     assert(!fclose(maze));
     exit(EXIT_FAILURE);
   }
+
 
   //get size of maze
   fscanf(maze, "%d %d", &width, &height);
