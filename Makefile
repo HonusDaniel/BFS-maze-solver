@@ -1,6 +1,6 @@
 OBJS	= main.o maze.o
-SOURCE	= main.c maze.cpp
-HEADER	= maze.h
+SOURCE	= main.cpp maze.cpp
+HEADER	= maze.hpp
 OUT	= a.out
 CC	 = g++
 FLAGS	 = -g -c -Wall
@@ -9,7 +9,7 @@ LFLAGS	 =
 all: $(OBJS)
 	$(CC) -g $(OBJS) -o $(OUT) $(LFLAGS)
 
-main.o: main.c
+main.o: main.cpp
 	$(CC) $(FLAGS) main.c -std=c++11
 
 maze.o: maze.cpp

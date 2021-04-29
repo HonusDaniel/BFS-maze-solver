@@ -1,5 +1,5 @@
 #include <iostream>
-#include "maze.h"
+#include "maze.hpp"
 
 int main()
 {
