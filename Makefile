@@ -10,7 +10,7 @@ all: $(OBJS)
 	$(CC) -g $(OBJS) -o $(OUT) $(LFLAGS)
 
 main.o: main.cpp
-	$(CC) $(FLAGS) main.c -std=c++11
+	$(CC) $(FLAGS) main.cpp -std=c++11
 
 maze.o: maze.cpp
 	$(CC) $(FLAGS) maze.cpp -std=c++11
