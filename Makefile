@@ -1,7 +1,7 @@
 OBJS	= main.o maze.o
 SOURCE	= main.cpp maze.cpp
-HEADER	= maze.hpp
-OUT	= a.out
+HEADER	= maze.h
+OUT	= maze-solver
 CC	 = g++
 FLAGS	 = -g -c -Wall
 LFLAGS	 = 
@@ -18,4 +18,3 @@ maze.o: maze.cpp
 
 clean:
 	rm -f $(OBJS) $(OUT)
-

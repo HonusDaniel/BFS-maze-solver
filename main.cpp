@@ -3,7 +3,7 @@
 
 int main()
 {
-    const char* mazefile = "input.txt";
+    const char* mazefile = "input";
 
     if (solve(mazefile) != 0)
         std::cout << "could not solve the maze." << std::endl;
