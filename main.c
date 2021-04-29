@@ -1,23 +1,12 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include "maze.h"
-#include <assert.h>
+#include <iostream>
+#include "maze.hpp"
 
 int main()
 {
-  //name of file to solve
-  char* mazefile = "input";
-  
-  //optionally print the file
-  printmaze(mazefile);
-  
-  //solve the maze
-  if (!(solve(mazefile) == 0))
-    {
-      printf("Could not solve the maze! There may be no solution, exiting...\n");
-      return 0;
-    }
-    
-  return 0;
+    const char* mazefile = "input";
+
+    if (solve(mazefile) != 0)
+        std::cout << "could not solve the maze." << std::endl;
+    return 0;
 }
+
