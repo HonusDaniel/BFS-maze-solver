@@ -1,6 +1,4 @@
-#include "maze.hpp"
-
-// https://stackoverflow.com/questions/60656309/how-could-i-optimize-my-breadth-search-algorithm-for-solving-bigger-mazes
+#include "maze.h"
 
 Spot::Spot(int x, int y, Spot* parent)
 {
@@ -206,4 +204,3 @@ int solve(const char* filename)
     delete themaze;
     return 0;
 }
-
