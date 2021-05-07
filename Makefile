@@ -1,6 +1,6 @@
 OBJS	= main.o maze.o
 SOURCE	= main.cpp maze.cpp
-HEADER	= maze.h
+HEADER	= maze.h spot.h
 OUT	= maze-solver
 CC	 = g++
 FLAGS	 = -g -c -Wall

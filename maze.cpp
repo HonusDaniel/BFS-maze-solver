@@ -1,28 +1,22 @@
 #include "maze.h"
-
+#include "spot.h"
+/// constuctor for Spot used for spots other than the start and finish
+/// @param parent a pointer to the parent of the Spot
 Spot::Spot(int x, int y, Spot* parent)
 {
     this->x = x;
     this->y = y;
     this->parent = parent;
 }
+/// parent set to nullptr, later used to stop the path search
 Spot::Spot()
 {
     this->parent = nullptr;
 }
 
-Spot* Spot::getParents()
-{
-    if (this->parent != nullptr)
-    {
-        do
-        {
-            std::cout << this->parent->getX() << ";" << this->parent->getY() << std::endl;
-        }         while (this->parent->getParents() != nullptr);
-    }
-    return nullptr;
-}
-
+/// opens the maze input file from filename and loads its contents into two new 2D arrays
+/// @param filename the file name passed from the main.cpp file as an argument to Maze::solve()
+/// \sa themaze \sa visited \sa filename
 Maze::Maze(const char* filename)
 {
     // if can't load file, exit
@@ -34,57 +28,103 @@ Maze::Maze(const char* filename)
         exit(EXIT_FAILURE);
     }
     
+    //maze dimensions
     maze >> this->width;
     maze >> this->height;
+
     this->themaze = new int* [this->width];
     this->visited = new bool* [this->width];
-    if (this->themaze && this->visited)  //kontrola alokace
+    if (this->themaze && this->visited)  //checks if allocated
     {
         for (int i = 0; i < this->width; i++)
         {
             this->themaze[i] = new int[this->height];
             this->visited[i] = new bool[this->height];
-            assert(this->themaze[i]); //kontrola alokace
+            assert(this->themaze[i]);
             assert(this->visited[i]);
         }
     }
 }
+
 Maze::~Maze()
 {
+    //free memory in queue
+    if(que.size() > 0)
+        for (int i = 0; i <= que.size(); i++)
+        {
+            Spot* del = this->que.front();
+            this->que.pop();
+            delete del;
+        }
+    // delete the rest
+    if (old.size() > 0)
+        for (int i = 0; i <= old.size(); i++)
+        {
+            Spot* del = this->old.front();
+            this->old.pop();
+            delete del;
+        }
+
     for (int i = 0; i < width; i++)
     {
         delete[] this->themaze[i];
         delete[] this->visited[i];
     }
+
     delete[] this->themaze;
     delete[] this->visited;
 }
+
+///  optional printing method
+void Maze::printer() {
+    for (int i = 0; i < this->height; i++)
+    {
+        for (int j = 0; j < this->width; j++)
+        {
+            if (themaze[i][j] == 1)
+                printf("#");
+            else if (themaze[i][j] == 2 || themaze[i][j] == 3)
+                printf("X");
+            else if (themaze[i][j] == 4)
+                printf("*");
+            else printf(" ");
+        }
+        printf("\n");
+    }
+}
+
+/// recusively goes through parents of the successful path to the end and marks their coordinates as the path for the output
 void Maze::aMaze()
 {
-    if (this->current->retParent() != nullptr)
+    Spot* temp = this->current;
+    if (temp->retParent() != nullptr)
     {
-        do
-        {
-            this->themaze[current->getX()][current->getY()] = 4;
-            this->current = this->current->retParent();
-            aMaze();
-        }         while (this->current->retParent() != nullptr);    delete this->current->retParent();
+        do {
+            themaze[temp->getX()][temp->getY()] = 4;
+            temp = temp->retParent();
+        } while (temp->retParent() != nullptr);
     }
-    delete this->current->retParent();
 }
 
 bool Maze::check(int X, int Y)
 {
-    if (!this->visited[X][Y])
-    {
-        if ((this->themaze[X][Y] == 0 || this->themaze[X][Y] == 3) && !(X == this->start->getX() && Y == this->start->getY()))
-            return true;
-    }
+    if (X < 0 || X >= this->width || Y < 0 || Y >= this->height)
+        return false;
+    else 
+        if (!this->visited[X][Y])
+        {
+            if ((this->themaze[X][Y] == 0 || this->themaze[X][Y] == 3) && (this->themaze[X][Y] != 2))
+                return true;
+        }
     return false;
 }
+
+/// main method for the bfs algorithm
+/// 
+/// loads data from file, checks the maze for errors, solves it and calls cleanup methods
 void Maze::theSolver()
 {
-    output.open("output");
+    output.open("output.txt");
     if (!(output.is_open()))
     {
         printf("could not create the output file, exiting...\n");
@@ -92,10 +132,10 @@ void Maze::theSolver()
         exit(EXIT_FAILURE);
     }
 
-
-    output << this->width << " ";
+    output << this->width << "\n";
     output << this->height << "\n";
 
+    // load the maze from file into array
     char c;
     for (int i = 0; i < height; i++)
     {
@@ -105,7 +145,6 @@ void Maze::theSolver()
             if (c == '\n')
                 maze.get(c);
             this->themaze[i][j] = c - '0';
-            //fscanf(this->maze, "%1d", &this->themaze[i][j]);
             this->visited[i][j] = false;
             if (themaze[i][j] == 2)
             {
@@ -123,7 +162,7 @@ void Maze::theSolver()
         exit(EXIT_FAILURE);
     }
 
-    this->visited[start->getX()][start->getY()] = true;
+    visited[start->getX()][start->getY()] = true;
 
     this->que.push(start);
     while (!this->que.empty())
@@ -132,8 +171,8 @@ void Maze::theSolver()
         this->que.pop();
         int curX = this->current->getX();
         int curY = this->current->getY();
+        visited[curX][curY] = true;
 
-        this->visited[this->current->getX()][this->current->getY()] = true;
         if ((curX == finish->getX()) && (curY == finish->getY()))
         {
             std::cout << "Found the exit at: " << current->getX() << ";" << current->getY() << std::endl;
@@ -142,56 +181,59 @@ void Maze::theSolver()
 
         if (check(curX + 1, curY))
         {
-            visited[curX + 1][curY] = true;
             Spot* next = new Spot(curX + 1, curY, this->current);
             que.push(next);
+            visited[curX + 1][curY] = true;
         }
         if (check(curX, curY + 1))
         {
-            visited[curX][curY + 1] = true;
             Spot* next = new Spot(curX, curY + 1, this->current);
             que.push(next);
+            visited[curX][curY + 1] = true;
         }
         if (check(curX - 1, curY))
         {
-            visited[curX - 1][curY] = true;
             Spot* next = new Spot(curX - 1, curY, this->current);
             que.push(next);
+            visited[curX - 1][curY] = true;
         }
         if (check(curX, curY - 1))
         {
-            visited[curX][curY - 1] = true;
             Spot* next = new Spot(curX, curY - 1, this->current);
             que.push(next);
+            visited[curX][curY - 1] = true;
         }
+        //store pointer of the unused spot to delete
+        this->old.push(current);
     }
 
-    //posunout ukazatel na aktualni
+    //que will be empty if there is no path
+    if (que.size() == 0)
+    {
+        std::cout << "The maze seems to be unsolvable. Exiting..." << std::endl;
+        delete finish;
+        maze.close();
+        output.close();
+        return;
+    }
+
+    Spot* rem = this->current;
     this->current = this->current->retParent();
-    //zapsat do souboru
+    delete rem;
     aMaze();
 
-    //read and print
-    /* */
+    //write to file
     for (int i = 0; i < height; i++)
     {
         for (int j = 0; j < width; j++)
         {
-            output << this->themaze[i][j];
-            if (themaze[i][j] == 1)
-                printf("#");
-            else if (themaze[i][j] == 2 || themaze[i][j] == 3)
-                printf("X");
-            else if (themaze[i][j] == 4)
-                printf("*");
-            else printf(" ");
+            this->output << this->themaze[i][j];
         }
-        output << "\n";
-        printf("\n");
+        this->output << "\n";
     }
 
-    delete start;
     delete finish;
+
     maze.close();
     output.close();
 }
@@ -199,8 +241,11 @@ void Maze::theSolver()
 int solve(const char* filename)
 {
     Maze* themaze = new Maze(filename);
+
     themaze->theSolver();
+    themaze->printer();
 
     delete themaze;
-    return 0;
+    return 4;
 }
+
