@@ -8,11 +8,6 @@ Spot::Spot(int x, int y, Spot* parent)
     this->y = y;
     this->parent = parent;
 }
-/// parent set to nullptr, later used to stop the path search
-Spot::Spot()
-{
-    this->parent = nullptr;
-}
 
 /// opens the maze input file from filename and loads its contents into two new 2D arrays
 /// @param filename the file name passed from the main.cpp file as an argument to Maze::solve()
@@ -50,7 +45,7 @@ Maze::~Maze()
 {
     //free memory in queue
     if(que.size() > 0)
-        for (int i = 0; i <= que.size(); i++)
+        for (long unsigned int i = 0; i <= que.size(); i++)
         {
             Spot* del = this->que.front();
             this->que.pop();
@@ -58,7 +53,7 @@ Maze::~Maze()
         }
     // delete the rest
     if (old.size() > 0)
-        for (int i = 0; i <= old.size(); i++)
+        for (long unsigned int i = 0; i <= old.size(); i++)
         {
             Spot* del = this->old.front();
             this->old.pop();

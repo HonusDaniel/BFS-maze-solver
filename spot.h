@@ -3,14 +3,13 @@
 #pragma once
 
 //! The class for the individual spots in the maze
-//! which gets created whenever an empty spot has been found in the maze. Contains a pointer to its parent and some basic information.
+//! gets created whenever an empty spot has been found in the maze. Contains a pointer to its parent and some basic information.
 class Spot
 {
 private:
     int x, y;
     Spot* parent = nullptr;
 public:
-    Spot();
     Spot(int x, int y, Spot* parent);
     int getX()
     {

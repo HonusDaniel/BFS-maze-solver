@@ -40,9 +40,6 @@ public:
     /// Boolean function to check validity of a Spot in the maze
     /// 
     /// Checks if the Spot has been visited already, if it is not the starting point and whether and whether it is within the bounds of the maze
-    /// @param X X axis position
-    /// @param Y Y axis position
-    /// @returns true or false, whether the spot can be enqueued
     bool check(int X, int Y);
     void printer();
 };
